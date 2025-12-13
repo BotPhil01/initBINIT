@@ -9,15 +9,13 @@ sudo apt-get -qq -y update
 sudo apt-get -qq -y upgrade
 
 # install downlaod dependencies
-sudo apt-get -qq -y install curl wget openssh-client git
-# sudo apt-get -qq -y install wget
-# sudo apt-get -qq -y install openssh-client
-# sudo apt-get -qq -y install git
+sudo apt-get -qq -y install curl wget openssh-client git flatpak
+
+# flatpak repo
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # install compression dependencies
 sudo apt-get -qq -y install tar zip unzip
-# sudo apt-get -qq -y install zip
-# sudo apt-get -qq -y install unzip
 
 # install signing dependencies 
 sudo apt-get -qq -y install gpg
