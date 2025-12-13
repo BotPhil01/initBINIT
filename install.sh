@@ -61,8 +61,8 @@ sudo apt-get -qq -y install ripgrep xclip
 nvimconfig_d="$HOME/.config/nvim/"
 if [[ ! -d $HOME/.config/nvim ]]; then
     mkdir $nvimconfig_d -p
+    response="$(gpgv --keyring /tmp/tor.keyring /tmp/tor.tar.xz.asc /tmp/tor.tar.xz)"
 fi
-git clone https://github.com/BotPhil01/nvim.git $nvimconfig_d
 
 # browsers
 # mullvad-browser
