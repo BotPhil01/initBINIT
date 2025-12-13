@@ -23,10 +23,10 @@ sudo apt-get -qq -y install gpg
 # install language dependencies
 
 # node and npm
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+curl -so- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 
 \. "$HOME/.nvm/nvm.sh"
-nvm install 24
+nvm install 24 1&>/dev/null
 
 # use below for erros loading nvm
 # export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
@@ -86,7 +86,7 @@ fi
 curl -sLo /tmp/tor.tar.xz.asc https://www.torproject.org/dist/torbrowser/15.0.3/tor-browser-linux-x86_64-15.0.3.tar.xz.asc
 curl -sLo /tmp/tor.tar.xz https://www.torproject.org/dist/torbrowser/15.0.3/tor-browser-linux-x86_64-15.0.3.tar.xz
 torpub="$(gpg -q --auto-key-locate nodefault,wkd --locate-keys torbrowser@torproject.org 1>&1 2>/dev/null | grep pub -A 1 | tail -n 1 | sed -s 's/ //g')"
-gpg --output /tmp/tor.keyring --export "0x$torpub" --yes
+gpg --yes --output /tmp/tor.keyring --export "0x$torpub"
 response="$(gpgv -q --keyring /tmp/tor.keyring /tmp/tor.tar.xz.asc /tmp/tor.tar.xz 2>&1)"
 goodsig=*"Good signature from Tor Browser Developers (signing key) <torbrowser@torproject.org>"*
 
