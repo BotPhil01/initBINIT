@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Mullvad
+Exec=mullvad-desktop
+OnlyShowIn=GNOME;
+AutostartCondition=GSettings org.gnome.desktop.background show-desktop-icons
+X-GNOME-Autostart-enabled=true
+Comment=start mullvad

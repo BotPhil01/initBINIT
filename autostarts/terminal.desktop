@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=terminal
+Exec=gnome-terminal
+OnlyShowIn=GNOME;
+AutostartCondition=GSettings org.gnome.desktop.background show-desktop-icons
+Comment=start terminal

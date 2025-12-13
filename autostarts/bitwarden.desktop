@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Exec=flatpak run com.bitwarden.desktop
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=bitwarden
+Comment=bitwarden
