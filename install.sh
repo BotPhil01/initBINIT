@@ -40,8 +40,7 @@ sudo apt-get -qq -y install make gcc clang
 # sudo apt-get -qq -y install clang
 
 # Python
-sudo apt-get -qq -y install python3 pip3
-# sudo apt-get -qq -y install pip3
+sudo apt-get -qq -y install python3
 
 # C++
 sudo apt-get -qq -y install g++
