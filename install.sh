@@ -61,15 +61,15 @@ sudo apt-get -qq -y install ripgrep xclip
 nvimconfig_d="$HOME/.config/nvim/"
 if [[ ! -d $HOME/.config/nvim ]]; then
     mkdir $nvimconfig_d -p
-    response="$(gpgv --keyring /tmp/tor.keyring /tmp/tor.tar.xz.asc /tmp/tor.tar.xz)"
+    git clone https://github.com/BotPhil01/nvim.git $nvimconfig_d -q
 fi
 
 # browsers
 # mullvad-browser
 sudo curl -fsSLo /usr/share/keyrings/mullvad-keyring.asc https://repository.mullvad.net/deb/mullvad-keyring.asc
 echo "deb [signed-by=/usr/share/keyrings/mullvad-keyring.asc arch=$( dpkg --print-architecture )] https://repository.mullvad.net/deb/stable stable main" | sudo tee /etc/apt/sources.list.d/mullvad.list
-sudo apt update
-sudo apt install mullvad-vpn
+sudo apt-get -qq -y update
+sudo apt-get -qq -y install mullvad-vpn
 
 # firefox
 if ! firefox --version 1>&/dev/null; then
@@ -79,15 +79,15 @@ fi
 # bitwarden
 # use flatpak because bitwarden doesnt have a cli tool
 if [[ "$(flatpak list | grep bitwarden)" == "" ]]; then
-    sudo flatpak install flathub com.bitwarden.desktop
+    sudo flatpak install -y flathub com.bitwarden.desktop 
 fi
 
 # Tor browser
-curl -Lo /tmp/tor.tar.xz.asc https://www.torproject.org/dist/torbrowser/15.0.3/tor-browser-linux-x86_64-15.0.3.tar.xz.asc
-curl -Lo /tmp/tor.tar.xz https://www.torproject.org/dist/torbrowser/15.0.3/tor-browser-linux-x86_64-15.0.3.tar.xz
-torpub="$(gpg --auto-key-locate nodefault,wkd --locate-keys torbrowser@torproject.org 1>&1 2>/dev/null | grep pub -A 1 | tail -n 1 | sed -s 's/ //g')"
+curl -sLo /tmp/tor.tar.xz.asc https://www.torproject.org/dist/torbrowser/15.0.3/tor-browser-linux-x86_64-15.0.3.tar.xz.asc
+curl -sLo /tmp/tor.tar.xz https://www.torproject.org/dist/torbrowser/15.0.3/tor-browser-linux-x86_64-15.0.3.tar.xz
+torpub="$(gpg -q --auto-key-locate nodefault,wkd --locate-keys torbrowser@torproject.org 1>&1 2>/dev/null | grep pub -A 1 | tail -n 1 | sed -s 's/ //g')"
 gpg --output /tmp/tor.keyring --export "0x$torpub" --yes
-response="$(gpgv --keyring /tmp/tor.keyring /tmp/tor.tar.xz.asc /tmp/tor.tar.xz 2>&1)"
+response="$(gpgv -q --keyring /tmp/tor.keyring /tmp/tor.tar.xz.asc /tmp/tor.tar.xz 2>&1)"
 goodsig=*"Good signature from Tor Browser Developers (signing key) <torbrowser@torproject.org>"*
 
 if [[ "$response" != *"$goodsig"* ]]; then
@@ -105,9 +105,9 @@ echo "   Types: deb deb-src
    Components: main
    Signed-By: /usr/share/keyrings/deb.torproject.org-keyring.gpg" > /etc/apt/sources.list.d/tor.sources
 sudo apt-get -qq -y install gnupg
-wget -qO- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --dearmor | sudo tee /usr/share/keyrings/deb.torproject.org-keyring.gpg >/dev/null
-sudo apt update
-sudo apt install tor deb.torproject.org-keyring
+wget -sqO- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --dearmor | sudo tee /usr/share/keyrings/deb.torproject.org-keyring.gpg >/dev/null
+sudo apt-get -qq -y update
+sudo apt-get -qq -y install tor deb.torproject.org-keyring
 cd script_dir
 
 # autostart config
@@ -115,7 +115,7 @@ cp $SCRIPT_DIR/autostarts/* ~/config/autostart
 
 # Anki
 sudo apt-get install -qq -y libxcb-xinerama0 libxcb-cursor0 libnss3 zstd
-curl https://github.com/ankitects/anki/releases/download/25.09/anki-launcher-25.09-linux.tar.zst -Lo /tmp/anki.tar.zst
+curl -sLo /tmp/anki.tar.zst https://github.com/ankitects/anki/releases/download/25.09/anki-launcher-25.09-linux.tar.zst
 mkdir /tmp/anki
 tar xaf /tmp/anki.tar.zst -C /tmp/anki
 cd /tmp/anki/$(ls /tmp/anki/)
