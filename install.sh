@@ -58,8 +58,8 @@ sudo apt-get -qq -y install ripgrep xclip
 # sudo apt-get -qq -y install xclip
 
 # get nvim config
-nvimconfig_d="~/.config/nvim/"
-if [[ ! -d ~/.config/nvim ]]; then
+nvimconfig_d="$HOME/.config/nvim/"
+if [[ ! -d $HOME/.config/nvim ]]; then
     mkdir $nvimconfig_d -p
 fi
 git clone https://github.com/BotPhil01/nvim.git $nvimconfig_d
