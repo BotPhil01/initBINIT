@@ -128,3 +128,7 @@ sudo ./install.sh
 sudo apt-get install -qq -y clamav clamav-daemon
 sudo cp $SCRIPT_DIR/clamav /etc/clamav
 sudo crontab $SCRIPT_DIR/clamcron
+
+# bin scripts
+
+git clone https://github.com/BotPhil01/bin.git 
