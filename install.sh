@@ -87,7 +87,7 @@ curl -Lo /tmp/tor.tar.xz.asc https://www.torproject.org/dist/torbrowser/15.0.3/t
 curl -Lo /tmp/tor.tar.xz https://www.torproject.org/dist/torbrowser/15.0.3/tor-browser-linux-x86_64-15.0.3.tar.xz
 torpub="$(gpg --auto-key-locate nodefault,wkd --locate-keys torbrowser@torproject.org 1>&1 2>/dev/null | grep pub -A 1 | tail -n 1 | sed -s 's/ //g')"
 gpg --output /tmp/tor.keyring --export "0x$torpub"
-response="$(gpgv --keyring /tmp/tor.keyring /tmp/tor.tar.xz.asc /tmp/tor.tar.xz)"
+response="$(gpgv --keyring /tmp/tor.keyring /tmp/tor.tar.xz.asc /tmp/tor.tar.xz 2>&1)"
 goodsig=*"Good signature from Tor Browser Developers (signing key) <torbrowser@torproject.org>"*
 
 if [[ "$response" != *"$goodsig"* ]]; then
