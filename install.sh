@@ -12,7 +12,7 @@ sudo apt-get -qq -y upgrade
 sudo apt-get -qq -y install curl wget openssh-client git flatpak
 
 # flatpak repo
-flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # install compression dependencies
 sudo apt-get -qq -y install tar zip unzip
@@ -79,7 +79,7 @@ fi
 # bitwarden
 # use flatpak because bitwarden doesnt have a cli tool
 if [[ "$(flatpak list | grep bitwarden)" == "" ]]; then
-    flatpak install flathub com.bitwarden.desktop
+    sudo flatpak install flathub com.bitwarden.desktop
 fi
 
 # Tor browser
