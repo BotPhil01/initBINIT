@@ -138,6 +138,7 @@ sudo apt-get -qq -y install gnupg
 wget -qO- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --dearmor | sudo tee /usr/share/keyrings/deb.torproject.org-keyring.gpg >/dev/null
 sudo apt-get -qq -y update
 echo "N" | sudo apt-get -qq -y install tor deb.torproject.org-keyring
+sudo service tor disable # disable by default
 cd $SCRIPT_DIR
 
 # bitwarden
@@ -177,3 +178,7 @@ echo "installing bin scripts"
 git clone https://github.com/BotPhil01/nonBINgusBONgus $HOME/.bin/
 cd $HOME/.bin/
 ./install.sh
+
+# TODO add default directory renaming
+# TODO add private dns setup
+# TODO add automatic tor proxy settings to gnome settings
