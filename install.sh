@@ -32,7 +32,7 @@ echo "installing languages"
 
 # node and npm
 echo "installing node npm nvm"
-curl -so- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash 1>/dev/null
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash 1>/dev/null
 
 \. "$HOME/.nvm/nvm.sh"
 nvm install 24 1&>/dev/null
@@ -47,7 +47,7 @@ sudo apt-get install -qq -y make gcc clang
 
 # Python
 echo "installing python3"
-sudo apt-get install -qq -y python3
+sudo apt-get install -qq -y python3 python3.12-venv
 
 # C++
 echo "installing g++"
@@ -60,8 +60,20 @@ sudo apt-get install -qq -y openjdk-21-jre
 
 # code editors
 echo "installing text editors"
-echo "installing vim neovim"
-sudo apt-get install -qq -y vim neovim
+echo "installing vim"
+sudo apt-get install -qq -y vim
+echo "installing neovim"
+curl -Lo /tmp/nvim-linux-x86_64.appimage https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
+sudo chmod u+x /tmp/nvim-linux-x86_64.appimage
+if [[ ! -d /opt/nvum ]]; then
+    sudo mkdir -p /opt/nvim
+fi
+sudo mv /tmp/nvim-linux-x86_64.appimage /opt/nvim/nvim
+pathnvim="$(grep nvim ~/.bashrc)"
+if [[ "$pathnvim" == "" ]]; then
+    echo "export PATH=\"$PATH:/opt/nvim/\"" >> $HOME/.bashrc
+fi
+
 echo "purging nano code"
 sudo apt-get remove -qq -y nano # fuck nano
 sudo snap remove --purge code # fuck code
@@ -109,22 +121,24 @@ if [[ "$response" != *"$goodsig"* ]]; then
     echo "Tor bad signature exiting..."
     exit 1
 fi
-sudo tar xf tor.tar.xz -C /opt/
-sudo cp tor /etc/tor
+sudo tar xf /tmp/tor.tar.xz -C /opt/
+sudo cp -r tor /etc/tor
 
 # litte-t-tor
 echo "installing little-t-tor"
 sudo apt-get -qq -y install apt-transport-https
-echo "   Types: deb deb-src
-   URIs: https://deb.torproject.org/torproject.org/
-   Suites: $(lsb_release -c | awk '{print$2}')
-   Components: main
-   Signed-By: /usr/share/keyrings/deb.torproject.org-keyring.gpg" > /etc/apt/sources.list.d/tor.sources
+torsource="Types: deb deb-src
+URIs: https://deb.torproject.org/torproject.org/
+Suites: $(lsb_release -c | awk '{print$2}')
+Components: main
+Signed-By: /usr/share/keyrings/deb.torproject.org-keyring.gpg"
+echo "$torsource" | sudo tee /etc/apt/sources.list.d/tor.sources
+
 sudo apt-get -qq -y install gnupg
-wget -sqO- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --dearmor | sudo tee /usr/share/keyrings/deb.torproject.org-keyring.gpg >/dev/null
+wget -qO- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --dearmor | sudo tee /usr/share/keyrings/deb.torproject.org-keyring.gpg >/dev/null
 sudo apt-get -qq -y update
-sudo apt-get -qq -y install tor deb.torproject.org-keyring
-cd script_dir
+echo "N" | sudo apt-get -qq -y install tor deb.torproject.org-keyring
+cd $SCRIPT_DIR
 
 # bitwarden
 # use flatpak because bitwarden doesnt have a cli tool
@@ -136,8 +150,10 @@ fi
 # Anki
 echo "installing Anki"
 sudo apt-get install -qq -y libxcb-xinerama0 libxcb-cursor0 libnss3 zstd
-curl -sLo /tmp/anki.tar.zst https://github.com/ankitects/anki/releases/download/25.09/anki-launcher-25.09-linux.tar.zst
-mkdir /tmp/anki
+curl -Lo /tmp/anki.tar.zst https://github.com/ankitects/anki/releases/download/25.09/anki-launcher-25.09-linux.tar.zst
+if [[ ! -d /tmp/anki ]]; then
+    mkdir /tmp/anki
+fi
 tar xaf /tmp/anki.tar.zst -C /tmp/anki
 cd /tmp/anki/$(ls /tmp/anki/)
 sudo ./install.sh
@@ -145,14 +161,19 @@ sudo ./install.sh
 # clamav
 echo "installing clamav"
 sudo apt-get install -qq -y clamav clamav-daemon
-sudo cp $SCRIPT_DIR/clamav /etc/clamav
+sudo cp -r $SCRIPT_DIR/clamav /etc/clamav
 sudo crontab $SCRIPT_DIR/clamcron
 
 
 # autostart config
 echo "installing autostarts"
-cp $SCRIPT_DIR/autostarts/* ~/config/autostart
+if [[ ! -d ~/.config/autostart ]]; then
+	mkdir ~/.config/autostart
+fi
+cp -r $SCRIPT_DIR/autostarts/* ~/.config/autostart
 
 # bin scripts
 echo "installing bin scripts"
-git clone https://github.com/BotPhil01/bin.git $HOME/.bin/
+git clone https://github.com/BotPhil01/nonBINgusBONgus $HOME/.bin/
+cd $HOME/.bin/
+./install.sh
