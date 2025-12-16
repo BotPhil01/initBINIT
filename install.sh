@@ -179,6 +179,18 @@ git clone https://github.com/BotPhil01/nonBINgusBONgus $HOME/.bin/
 cd $HOME/.bin/
 ./install.sh
 
-# TODO add default directory renaming
+
+# default directory renaming
+declare -A dirchanges=( 
+    ['Desktop']='.dsktp' ['Documents']='docs'
+    ['Downloads']='dwnld' ['Music']='.music'
+    ['Pictures']='pics' ['Public']='.share'
+    ['Templates']='.tmpls' ['Videos']='vids')
+
+dirs="$(ls ~)"
+while IFS= read -r dir; do
+    echo mv "$dir" "${dirchanges[$dir]}"
+done < "$dirs"
+
 # TODO add private dns setup
 # TODO add automatic tor proxy settings to gnome settings
